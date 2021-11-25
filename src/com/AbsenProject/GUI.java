@@ -120,7 +120,7 @@ public class GUI{
 
                 if(dateIn.after(dateOut)) {
 
-                    outDateField.setText(" ");
+                    outDateField.setText(null);
 
                 }
             }
@@ -172,6 +172,9 @@ public class GUI{
 
                     dataAbsen.add(new DataAbsen(chooseName, inDateField.getText(), outDateField.getText()));
 
+                    inDateField.setText(null);
+                    outDateField.setText(null);
+
                 }
             }
         });
@@ -199,9 +202,11 @@ public class GUI{
 
                 }
 
-                JFrame tableFrame = new JFrame();
+                JFrame tableFrame = new JFrame("Absen List");
                 JTable table = new JTable(model);
 
+                tableFrame.setPreferredSize(new Dimension(500, 300));
+                tableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 tableFrame.setResizable(false);
                 tableFrame.setLocationRelativeTo(null);
                 tableFrame.getContentPane().add(new JScrollPane(table));
