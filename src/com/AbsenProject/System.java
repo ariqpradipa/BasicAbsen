@@ -11,27 +11,27 @@ import java.util.Date;
 
 public class System {
 
-    private JFrame frame;
+    private JFrame frame;   // main frame variable
     private JPanel panel;
     String chooseName;
 
-    Date dateIn, dateOut = new Date();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date dateIn, dateOut = new Date(); // set date
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // date format
 
-    ArrayList<DataAbsen> dataAbsen = new ArrayList<DataAbsen>();
+    ArrayList<DataAbsen> dataAbsen = new ArrayList<DataAbsen>();    // create object arraylist
 
-    JComboBox nameDropDown = new JComboBox();
+    JComboBox nameDropDown = new JComboBox();   // dropdown name selector
 
     public System() {
 
-        frame = new JFrame("ABSEN PROGRAM");
+        frame = new JFrame("ABSEN PROGRAM"); // create frame and set title
 
         panel = new JPanel();
-        SpringLayout sprnglyt = new SpringLayout();
+        SpringLayout sprnglyt = new SpringLayout(); // set layot type
 
         JLabel nameLabel = new JLabel("Nama: ");
 
-        nameDropDown.setPreferredSize(new Dimension(160, 25));
+        nameDropDown.setPreferredSize(new Dimension(160, 25));  // dropdown size
         chooseName = (String) nameDropDown.getSelectedItem();
         nameDropDown.addActionListener(new ActionListener() {
             @Override
@@ -41,6 +41,8 @@ public class System {
             }
         });
 
+        // for testing purpose only, currently not being used
+        // show what namedropdown selector is choosing
         JButton showName = new JButton("Show Name");
         showName.addActionListener(new ActionListener() {
             @Override
@@ -52,11 +54,13 @@ public class System {
             }
         });
 
+        // adding new pegawai to the system
         JButton addNewName = new JButton("ADD Pegawai");
         addNewName.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                // showing the input name dialog
                 String name = (String) JOptionPane.showInputDialog(
                         frame,
                         "Input new Pegawai name",
@@ -69,7 +73,7 @@ public class System {
 
                 if(name != null && name.length() >= 4) {
 
-                    nameDropDown.addItem(name);
+                    nameDropDown.addItem(name); // adding name to the dropdown selector
 
                 } else if(name.length() < 1) {
 
@@ -100,16 +104,21 @@ public class System {
             }
         });
 
+        // for in date time
         JLabel inDateLabel = new JLabel("In Time: ");
         JTextField inDateField = new JTextField();
         inDateField.setEditable(false);
         inDateField.setPreferredSize(new Dimension(160, 25));
 
+        //for out date time
         JLabel outDateLabel = new JLabel("Out Time: ");
         JTextField outDateField = new JTextField();
         outDateField.setEditable(false);
         outDateField.setPreferredSize(new Dimension(160, 25));
 
+        // set time button for in and out
+        // out time is 8 hours after in time
+        // because the work time is 8 hours
         JButton inDateSet = new JButton("Set Time");
         inDateSet.addActionListener(new ActionListener() {
             @Override
@@ -117,21 +126,7 @@ public class System {
 
                 dateIn = new Date();
                 inDateField.setText(dateFormat.format(dateIn));
-
-                if(dateIn.after(dateOut)) {
-
-                    outDateField.setText(null);
-
-                }
-            }
-        });
-
-        JButton outDateSet = new JButton("Set Time");
-        outDateSet.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                dateOut = new Date();
+                dateOut = new Date(dateIn.getTime() + 8 * (3600*1000));
                 outDateField.setText(dateFormat.format(dateOut));
 
             }
@@ -231,7 +226,6 @@ public class System {
 
         panel.add(outDateLabel);
         panel.add(outDateField);
-        panel.add(outDateSet);
 
         panel.add(absenButton);
         panel.add(showAbsen);
@@ -242,8 +236,6 @@ public class System {
         sprnglyt.putConstraint(SpringLayout.NORTH, nameDropDown, 6, SpringLayout.NORTH, panel);
         sprnglyt.putConstraint(SpringLayout.WEST, addNewName, 6, SpringLayout.EAST, nameDropDown);
         sprnglyt.putConstraint(SpringLayout.NORTH, addNewName, 6, SpringLayout.NORTH, panel);
-        // sprnglyt.putConstraint(SpringLayout.WEST, showName, 6, SpringLayout.EAST, addNewName);
-        // sprnglyt.putConstraint(SpringLayout.NORTH, showName, 6, SpringLayout.NORTH, panel);
 
         sprnglyt.putConstraint(SpringLayout.WEST, inDateLabel, 6, SpringLayout.WEST, panel);
         sprnglyt.putConstraint(SpringLayout.NORTH, inDateLabel, 35, SpringLayout.NORTH, nameLabel);
@@ -256,8 +248,8 @@ public class System {
         sprnglyt.putConstraint(SpringLayout.NORTH, outDateLabel, 35, SpringLayout.NORTH, inDateLabel);
         sprnglyt.putConstraint(SpringLayout.WEST, outDateField, 6, SpringLayout.EAST, outDateLabel);
         sprnglyt.putConstraint(SpringLayout.NORTH, outDateField, 32, SpringLayout.NORTH, inDateField);
-        sprnglyt.putConstraint(SpringLayout.WEST, outDateSet, 6, SpringLayout.EAST, outDateField);
-        sprnglyt.putConstraint(SpringLayout.NORTH, outDateSet, 32, SpringLayout.NORTH, inDateSet);
+        //sprnglyt.putConstraint(SpringLayout.WEST, outDateSet, 6, SpringLayout.EAST, outDateField);
+        //sprnglyt.putConstraint(SpringLayout.NORTH, outDateSet, 32, SpringLayout.NORTH, inDateSet);
 
         sprnglyt.putConstraint(SpringLayout.WEST, absenButton, 160, SpringLayout.WEST, panel);
         sprnglyt.putConstraint(SpringLayout.SOUTH, absenButton, -20, SpringLayout.SOUTH, panel);

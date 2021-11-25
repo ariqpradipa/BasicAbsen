@@ -1,5 +1,7 @@
 package com.AbsenProject;
 
+// Absen Object
+// Store name, date In, date out
 public class DataAbsen {
 
     String name;
