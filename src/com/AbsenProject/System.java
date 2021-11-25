@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class GUI{
+public class System {
 
     private JFrame frame;
     private JPanel panel;
@@ -22,7 +22,7 @@ public class GUI{
 
     JComboBox nameDropDown = new JComboBox();
 
-    public GUI() {
+    public System() {
 
         frame = new JFrame("ABSEN PROGRAM");
 
