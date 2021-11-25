@@ -1,6 +1,7 @@
 package com.AbsenProject;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,19 +9,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class GUI implements ActionListener{
+public class GUI{
 
     private JFrame frame;
     private JPanel panel;
     String chooseName;
-    String inDate;
-    String outDate;
 
     Date dateIn, dateOut = new Date();
-
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public GUI(ArrayList<String> nameArrayListString) {
+    ArrayList<DataAbsen> dataAbsen = new ArrayList<DataAbsen>();
+
+    JComboBox nameDropDown = new JComboBox();
+
+    public GUI() {
 
         frame = new JFrame("ABSEN PROGRAM");
 
@@ -29,7 +31,6 @@ public class GUI implements ActionListener{
 
         JLabel nameLabel = new JLabel("Nama: ");
 
-        JComboBox nameDropDown = new JComboBox(nameArrayListString.toArray());
         nameDropDown.setPreferredSize(new Dimension(160, 25));
         chooseName = (String) nameDropDown.getSelectedItem();
         nameDropDown.addActionListener(new ActionListener() {
@@ -68,8 +69,7 @@ public class GUI implements ActionListener{
 
                 if(name != null && name.length() >= 4) {
 
-                    frame.dispose();
-                    AbsenMain.addName(name);
+                    nameDropDown.addItem(name);
 
                 } else if(name.length() < 1) {
 
@@ -138,7 +138,6 @@ public class GUI implements ActionListener{
         });
 
         JButton absenButton = new JButton("Absen");
-
         absenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -169,17 +168,57 @@ public class GUI implements ActionListener{
                             "Out Time Not Set",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+                } else {
+
+                    dataAbsen.add(new DataAbsen(chooseName, inDateField.getText(), outDateField.getText()));
+
                 }
             }
         });
 
-        panel.setPreferredSize(new Dimension(500, 200));
+        JButton showAbsen = new JButton("Lihat Absen");
+        showAbsen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                DefaultTableModel model = new DefaultTableModel(
+                        new Object[][] {
+
+                        },
+                        new Object[] {
+                                "Nama", "In Time", "Out Time"
+                        });
+
+                Object rowData[] = new Object[3];
+                for(int i = 0; i < dataAbsen.size(); i++) {
+
+                    rowData[0] = dataAbsen.get(i).name;
+                    rowData[1] = dataAbsen.get(i).dateIn;
+                    rowData[2] = dataAbsen.get(i).dateOut;
+                    model.addRow(rowData);
+
+                }
+
+                JFrame tableFrame = new JFrame();
+                JTable table = new JTable(model);
+
+                tableFrame.setResizable(false);
+                tableFrame.setLocationRelativeTo(null);
+                tableFrame.getContentPane().add(new JScrollPane(table));
+                tableFrame.pack();
+                tableFrame.setVisible(true);
+
+            }
+        });
+
+
+        panel.setPreferredSize(new Dimension(400, 200));
         panel.setLayout(sprnglyt);
 
         panel.add(nameLabel);
         panel.add(nameDropDown);
         panel.add(addNewName);
-        panel.add(showName);
+        // panel.add(showName);
 
         panel.add(inDateLabel);
         panel.add(inDateField);
@@ -190,6 +229,7 @@ public class GUI implements ActionListener{
         panel.add(outDateSet);
 
         panel.add(absenButton);
+        panel.add(showAbsen);
 
         sprnglyt.putConstraint(SpringLayout.WEST, nameLabel, 6, SpringLayout.WEST, panel);
         sprnglyt.putConstraint(SpringLayout.NORTH, nameLabel, 8, SpringLayout.NORTH, panel);
@@ -197,8 +237,8 @@ public class GUI implements ActionListener{
         sprnglyt.putConstraint(SpringLayout.NORTH, nameDropDown, 6, SpringLayout.NORTH, panel);
         sprnglyt.putConstraint(SpringLayout.WEST, addNewName, 6, SpringLayout.EAST, nameDropDown);
         sprnglyt.putConstraint(SpringLayout.NORTH, addNewName, 6, SpringLayout.NORTH, panel);
-        sprnglyt.putConstraint(SpringLayout.WEST, showName, 6, SpringLayout.EAST, addNewName);
-        sprnglyt.putConstraint(SpringLayout.NORTH, showName, 6, SpringLayout.NORTH, panel);
+        // sprnglyt.putConstraint(SpringLayout.WEST, showName, 6, SpringLayout.EAST, addNewName);
+        // sprnglyt.putConstraint(SpringLayout.NORTH, showName, 6, SpringLayout.NORTH, panel);
 
         sprnglyt.putConstraint(SpringLayout.WEST, inDateLabel, 6, SpringLayout.WEST, panel);
         sprnglyt.putConstraint(SpringLayout.NORTH, inDateLabel, 35, SpringLayout.NORTH, nameLabel);
@@ -214,8 +254,10 @@ public class GUI implements ActionListener{
         sprnglyt.putConstraint(SpringLayout.WEST, outDateSet, 6, SpringLayout.EAST, outDateField);
         sprnglyt.putConstraint(SpringLayout.NORTH, outDateSet, 32, SpringLayout.NORTH, inDateSet);
 
-        sprnglyt.putConstraint(SpringLayout.WEST, absenButton, 200, SpringLayout.WEST, panel);
+        sprnglyt.putConstraint(SpringLayout.WEST, absenButton, 160, SpringLayout.WEST, panel);
         sprnglyt.putConstraint(SpringLayout.SOUTH, absenButton, -20, SpringLayout.SOUTH, panel);
+        sprnglyt.putConstraint(SpringLayout.EAST, showAbsen, -20, SpringLayout.EAST, panel);
+        sprnglyt.putConstraint(SpringLayout.SOUTH, showAbsen, -20, SpringLayout.SOUTH, panel);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -225,11 +267,4 @@ public class GUI implements ActionListener{
         frame.setVisible(true);
 
     }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
 }
