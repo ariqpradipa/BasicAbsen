@@ -16,11 +16,11 @@ public class System {
     String chooseName;
 
     Date dateIn, dateOut = new Date(); // set date
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // date format
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMM yyyy HH:mm:ss"); // date format
 
     ArrayList<DataAbsen> dataAbsen = new ArrayList<DataAbsen>();    // create object arraylist
 
-    JComboBox nameDropDown = new JComboBox();   // dropdown name selector
+    JComboBox<String> nameDropDown = new JComboBox<String>();   // dropdown name selector
 
     public System() {
 
@@ -31,7 +31,7 @@ public class System {
 
         JLabel nameLabel = new JLabel("Nama: ");
 
-        nameDropDown.setPreferredSize(new Dimension(160, 25));  // dropdown size
+        nameDropDown.setPreferredSize(new Dimension(170, 25));  // dropdown size
         chooseName = (String) nameDropDown.getSelectedItem();
         nameDropDown.addActionListener(new ActionListener() {
             @Override
@@ -43,6 +43,7 @@ public class System {
 
         // for testing purpose only, currently not being used
         // show what namedropdown selector is choosing
+        /*
         JButton showName = new JButton("Show Name");
         showName.addActionListener(new ActionListener() {
             @Override
@@ -53,6 +54,7 @@ public class System {
                 );
             }
         });
+        */
 
         // adding new pegawai to the system
         JButton addNewName = new JButton("ADD Pegawai");
@@ -71,33 +73,18 @@ public class System {
                         null
                 );
 
-                if(name != null && name.length() >= 4) {
+                try {
 
-                    nameDropDown.addItem(name); // adding name to the dropdown selector
+                    nameCheck(name);
+                    nameDropDown.addItem(name);
 
-                } else if(name.length() < 1) {
+                } catch(NameAppropriateException ex) {
 
                     JOptionPane.showMessageDialog(
                             frame,
-                            "Name cannot be empty!",
-                            "Blank Name Error",
+                            ex.getMessage(),
+                            "Error",
                             JOptionPane.INFORMATION_MESSAGE
-                    );
-
-                } else if(name.length() < 4) {
-
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Name must be 4 letters or more",
-                            "Minimum Letters Error",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-
-                } else {
-
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Something went wrong"
                     );
 
                 }
@@ -108,13 +95,13 @@ public class System {
         JLabel inDateLabel = new JLabel("In Time: ");
         JTextField inDateField = new JTextField();
         inDateField.setEditable(false);
-        inDateField.setPreferredSize(new Dimension(160, 25));
+        inDateField.setPreferredSize(new Dimension(170, 25));
 
         //for out date time
         JLabel outDateLabel = new JLabel("Out Time: ");
         JTextField outDateField = new JTextField();
         outDateField.setEditable(false);
-        outDateField.setPreferredSize(new Dimension(160, 25));
+        outDateField.setPreferredSize(new Dimension(170, 25));
 
         // set time button for in and out
         // out time is 8 hours after in time
@@ -200,7 +187,7 @@ public class System {
                 JFrame tableFrame = new JFrame("Absen List");
                 JTable table = new JTable(model);
 
-                tableFrame.setPreferredSize(new Dimension(500, 300));
+                tableFrame.setPreferredSize(new Dimension(520, 300));
                 tableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 tableFrame.setResizable(false);
                 tableFrame.setLocationRelativeTo(null);
@@ -263,5 +250,26 @@ public class System {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
+    }
+
+    public static String nameCheck(String name) throws NameAppropriateException {
+
+        if(name != null && name.length() >= 4) {
+
+            return name; // adding name to the dropdown selector
+
+        } else if(name.length() < 1) {
+
+            throw new NameAppropriateException("Name cannot be empty!");
+
+        } else if(name.length() < 4) {
+
+            throw new NameAppropriateException("Name must be 4 letters or more!");
+
+        } else {
+
+            throw new NameAppropriateException("Something went wrong");
+
+        }
     }
 }
